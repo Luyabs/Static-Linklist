@@ -129,6 +129,7 @@ int SLink<ElemType>::Find(const ElemType& e)
 
 
 
+
 /*
 template <class ElemType>
 class SLink		//当前带头结点 单向 非循环  可以之后再改
