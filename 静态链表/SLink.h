@@ -78,7 +78,7 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 	{
 		j = node[j].next;
 	}
-	//node[p].next = node[j].next;		//断链重连
+	node[p].next = node[j].next;		//断链重连
 	node[j].next = p;				
 	length++;
 }
