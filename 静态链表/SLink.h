@@ -19,6 +19,7 @@ public:
 	void Traverse(bool write = true) const;		//遍历(输出/不输出)
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
+	int Find(const ElemType& e);
 
 };
 
@@ -43,6 +44,7 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//wri
 	int p = node[0].next;
 	if (write)
 	{
+		if (length > 0)cout << "head ->";
 		while (p != -1 && p != avail)
 		{
 			cout << node[p].data << " -> ";
@@ -71,19 +73,35 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
 	node[avail].data = e;		
-	int j = node[0].next;							//loc处的前一个结点
+	int j = 0;							//loc处的前一个结点
 	int p = avail;					//记录这个刚有数据的结点
 	avail = node[avail].next;		//avail移动到空表的下一个位置
+
 	for (int i = 0; i < loc - 1; i++)		//找到j
 	{
 		j = node[j].next;
 	}
-	node[p].next = node[j].next;		//断链重连
+	int d = j;
+	for (; node[d].next != p; d = node[d].next);
+	node[d].next = avail;
+	if (node[j].next == p)
+	{
+		node[p].next = avail;
+	}
+	else
+		node[p].next = node[j].next;		//断链重连
 	node[j].next = p;				
 	length++;
 }
 
-
+template<class ElemType>
+int SLink<ElemType>::Find(const ElemType& e)
+{
+	int j = 0;
+	for (; node[j].next != avail; j = node[j].next);
+	if (node[j].data == e) return j;
+	return -1;
+}
 
 
 
