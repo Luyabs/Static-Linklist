@@ -3,22 +3,22 @@
 #include <iostream>
 using namespace std;
 
-const int MAXSIZE = 100;		//Ã¿´ÎÉêÇë¶ÑÊı×éµÄ´óĞ¡
-const int RANGE_ERROR = 1001;	//Ô½½çÅ×³ö1001
+const int MAXSIZE = 100;		//æ¯æ¬¡ç”³è¯·å †æ•°ç»„çš„å¤§å°
+const int RANGE_ERROR = 1001;	//è¶Šç•ŒæŠ›å‡º1001
 
-template <class ElemType> class SLink		//µ±Ç° µ¥Ïò ·ÇÑ­»·  ¿ÉÒÔÖ®ºóÔÙ¸Ä
+template <class ElemType> class SLink		//å½“å‰ å•å‘ éå¾ªç¯  å¯ä»¥ä¹‹åå†æ”¹
 {
 protected:
-	SNode<ElemType> *node;		//ÓÃnodeÖ¸Ïò¶ÑÊı×éÊ×½áµã ÒÔ´Ë×÷Îª¾²Ì¬Á´±íÊ×½áµã node[0]ÓëÆÕÍ¨Á´±íµÄÊ×½áµãÀàËÆ
-	int avail;					//¾²Ì¬Á´±íÏÂÒ»¸ö¿ÕÎ»µÄÏÂ±ê ½«³ıÈ¥node[0]ÍâËùÓĞÃ»ÓĞdataµÄ½áµã ¶¼¹éÎª¿Õ±í ¿Õ±íµÄÊ×½áµãÎªavail availÆğµ½ÔöÉ¾µÄÖØÒª×÷ÓÃ
-	int length;					//µ±Ç°ÒÑÓµÓĞµÄ½áµãÊı(²»°üÀ¨head)
+	SNode<ElemType> *node;		//ç”¨nodeæŒ‡å‘å †æ•°ç»„é¦–ç»“ç‚¹ ä»¥æ­¤ä½œä¸ºé™æ€é“¾è¡¨é¦–ç»“ç‚¹ node[0]ä¸æ™®é€šé“¾è¡¨çš„é¦–ç»“ç‚¹ç±»ä¼¼
+	int avail;					//é™æ€é“¾è¡¨ä¸‹ä¸€ä¸ªç©ºä½çš„ä¸‹æ ‡ å°†é™¤å»node[0]å¤–æ‰€æœ‰æ²¡æœ‰dataçš„ç»“ç‚¹ éƒ½å½’ä¸ºç©ºè¡¨ ç©ºè¡¨çš„é¦–ç»“ç‚¹ä¸ºavail availèµ·åˆ°å¢åˆ çš„é‡è¦ä½œç”¨
+	int length;					//å½“å‰å·²æ‹¥æœ‰çš„ç»“ç‚¹æ•°(ä¸åŒ…æ‹¬head)
 
 public:
-	SLink();					//·ÖÅä¿Õ¼ä ÓÃnext°Ñ½áµãÁ¬ÔÚÒ»Æğ ´´Ôì¿Õ±í 
+	SLink();					//åˆ†é…ç©ºé—´ ç”¨nextæŠŠç»“ç‚¹è¿åœ¨ä¸€èµ· åˆ›é€ ç©ºè¡¨ 
 	virtual ~SLink();
-	void Traverse(bool write = true) const;		//±éÀú(Êä³ö/²»Êä³ö)
-	void Insert(const ElemType& e);				//Î²²å·¨ //²åÈëÍê³Éºó avail×Ô¶¯ÏòºóÒÆ£¬É¾³ıÍê³Éºó avail±äµ½±»É¾´¦µÄÎ»ÖÃ 
-	void Insert(int loc, const ElemType& e);		//²åÈë£¬Ê¹e³ÉÎªÁ´±íµÚloc¸öÔªËØ(²»Ëãhead)
+	void Traverse(bool write = true) const;		//éå†(è¾“å‡º/ä¸è¾“å‡º)
+	void Insert(const ElemType& e);				//å°¾æ’æ³• //æ’å…¥å®Œæˆå availè‡ªåŠ¨å‘åç§»ï¼Œåˆ é™¤å®Œæˆå availå˜åˆ°è¢«åˆ å¤„çš„ä½ç½® 
+	void Insert(int loc, const ElemType& e);		//æ’å…¥ï¼Œä½¿eæˆä¸ºé“¾è¡¨ç¬¬locä¸ªå…ƒç´ (ä¸ç®—head)
 	int Find(const ElemType& e);
 
 };
@@ -29,7 +29,7 @@ template<class ElemType> SLink<ElemType>::SLink() : length(0),avail(1)
 	node = new SNode<ElemType>[MAXSIZE];
 	for (int i = 0; i < MAXSIZE - 1; i++) 
 	{
-		node[i].next = i + 1;		//µÚi¸öÔªËØµÄnextÖ¸Ïòi+1 ×îºóÔªËØÄ¬ÈÏÖ¸-1
+		node[i].next = i + 1;		//ç¬¬iä¸ªå…ƒç´ çš„nextæŒ‡å‘i+1 æœ€åå…ƒç´ é»˜è®¤æŒ‡-1
 	}
 }
 
@@ -39,7 +39,7 @@ template<class ElemType> SLink<ElemType>::~SLink()
 	length = 0;
 }
 
-template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//write == 1 Êä³öÒ»±éÁ´±í, write == 0 ½öÒÆ¶¯µ½±íÎ²
+template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//write == 1 è¾“å‡ºä¸€éé“¾è¡¨, write == 0 ä»…ç§»åŠ¨åˆ°è¡¨å°¾
 {
 	int p = node[0].next;
 	if (write)
@@ -64,7 +64,7 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//wri
 template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
 	node[avail].data = e;			
-	avail = node[avail].next;		//availÒÆ¶¯µ½¿Õ±íµÄÏÂÒ»¸öÎ»ÖÃ
+	avail = node[avail].next;		//availç§»åŠ¨åˆ°ç©ºè¡¨çš„ä¸‹ä¸€ä¸ªä½ç½®
 	length++;
 }
 
@@ -73,11 +73,11 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
 	node[avail].data = e;		
-	int j = 0;							//loc´¦µÄÇ°Ò»¸ö½áµã
-	int p = avail;					//¼ÇÂ¼Õâ¸ö¸ÕÓĞÊı¾İµÄ½áµã
-	avail = node[avail].next;		//availÒÆ¶¯µ½¿Õ±íµÄÏÂÒ»¸öÎ»ÖÃ
+	int j = 0;							//locå¤„çš„å‰ä¸€ä¸ªç»“ç‚¹
+	int p = avail;					//è®°å½•è¿™ä¸ªåˆšæœ‰æ•°æ®çš„ç»“ç‚¹
+	avail = node[avail].next;		//availç§»åŠ¨åˆ°ç©ºè¡¨çš„ä¸‹ä¸€ä¸ªä½ç½®
 
-	for (int i = 0; i < loc - 1; i++)		//ÕÒµ½j
+	for (int i = 0; i < loc - 1; i++)		//æ‰¾åˆ°j
 	{
 		j = node[j].next;
 	}
@@ -89,7 +89,7 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 		node[p].next = avail;
 	}
 	else
-		node[p].next = node[j].next;		//¶ÏÁ´ÖØÁ¬
+		node[p].next = node[j].next;		//æ–­é“¾é‡è¿
 	node[j].next = p;				
 	length++;
 }
@@ -129,28 +129,27 @@ int SLink<ElemType>::Find(const ElemType& e)
 
 
 
-
 /*
 template <class ElemType>
-class SLink		//µ±Ç°´øÍ·½áµã µ¥Ïò ·ÇÑ­»·  ¿ÉÒÔÖ®ºóÔÙ¸Ä
+class SLink		//å½“å‰å¸¦å¤´ç»“ç‚¹ å•å‘ éå¾ªç¯  å¯ä»¥ä¹‹åå†æ”¹
 {
 protected:
-	SNode<ElemType> head;		//´øÍ·½áµã	p = link[p.next]Ïàµ±ÓÚp = p->next 
-	int avail;			//¾²Ì¬Á´±í¿ÕÎ»µÄÏÂ±ê
-	int length;			//µ±Ç°ÒÑÓµÓĞµÄ½áµãÊı(²»°üÀ¨head)
-	int max_length;		//×î¶àÄÜÓµÓĞµÄ½áµãÊı(°üÀ¨ÁËhead)(ÓÉ³õÊ¼ËùÉêÇëµÄ¶¯Ì¬ÄÚ´æ¾ö¶¨)
+	SNode<ElemType> head;		//å¸¦å¤´ç»“ç‚¹	p = link[p.next]ç›¸å½“äºp = p->next 
+	int avail;			//é™æ€é“¾è¡¨ç©ºä½çš„ä¸‹æ ‡
+	int length;			//å½“å‰å·²æ‹¥æœ‰çš„ç»“ç‚¹æ•°(ä¸åŒ…æ‹¬head)
+	int max_length;		//æœ€å¤šèƒ½æ‹¥æœ‰çš„ç»“ç‚¹æ•°(åŒ…æ‹¬äº†head)(ç”±åˆå§‹æ‰€ç”³è¯·çš„åŠ¨æ€å†…å­˜å†³å®š)
 
 public:
-	//»ù±¾¸¨Öúº¯Êı: ÅĞ¿Õ,Çå¿Õ,·µ»Ø³¤¶È/×î´ó³¤¶È,±éÀú µÈ
+	//åŸºæœ¬è¾…åŠ©å‡½æ•°: åˆ¤ç©º,æ¸…ç©º,è¿”å›é•¿åº¦/æœ€å¤§é•¿åº¦,éå† ç­‰
 
-	//»ù±¾¹¦ÄÜº¯Êı£ºÔö,É¾,¸Ä,²é,µ¹ÖÃ,ºÏ²¢,ÅÅĞò µÈ
-	void SLink<ElemType>::Insert(const ElemType& e);		//Î²²å
+	//åŸºæœ¬åŠŸèƒ½å‡½æ•°ï¼šå¢,åˆ ,æ”¹,æŸ¥,å€’ç½®,åˆå¹¶,æ’åº ç­‰
+	void SLink<ElemType>::Insert(const ElemType& e);		//å°¾æ’
 
-	//¿¼ÂÇÎªMax_lengthÀ©Èİ(ÖØĞÂ·ÖÅä¸ü´óµÄÄÚ´æ¿Õ¼ä ¡ú copy ¡ú delete)  »òÕß ¿¼ÂÇÈÃÁ½¸ö²»Í¬µÄ¾²Ì¬Á´±í½¨Á¢ÁªÏµÀ´À©Èİ
+	//è€ƒè™‘ä¸ºMax_lengthæ‰©å®¹(é‡æ–°åˆ†é…æ›´å¤§çš„å†…å­˜ç©ºé—´ â†’ copy â†’ delete)  æˆ–è€… è€ƒè™‘è®©ä¸¤ä¸ªä¸åŒçš„é™æ€é“¾è¡¨å»ºç«‹è”ç³»æ¥æ‰©å®¹
 
-	//ÔËËã·û + ÊäÈëÊä³öÁ÷ÖØÔØ
+	//è¿ç®—ç¬¦ + è¾“å…¥è¾“å‡ºæµé‡è½½
 
-	//ËÄ´óº¯Êı
+	//å››å¤§å‡½æ•°
 	SLink();
 	SLink(ElemType arr[], int n);
 	virtual ~SLink();
@@ -161,18 +160,18 @@ public:
 
 template <class ElemType> SLink<ElemType>::SLink()
 {
-	head = new SNode<ElemType>;		//¹¹Ôì¿ÕÍ·
-	avail = -1;					//Á´±íÃ»ÓĞ¿ÕÎ»
+	head = new SNode<ElemType>;		//æ„é€ ç©ºå¤´
+	avail = -1;					//é“¾è¡¨æ²¡æœ‰ç©ºä½
 	length = 0;						
 }
 
 template <class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
 	SNode<ElemType> p, q;
-	q = new Node<ElemType>(e, -1);    // Éú³ÉĞÂ½áµãq
-	for (p = head; p.next != -1; p = p->next);	// pÖ¸Ïò±íÎ²½áµã	
-	p->next = q;                        // ÔÚµ¥Á´±íµÄ±íÎ²Î»ÖÃ²åÈëĞÂ½áµã 
-	length++;							// ²åÈë³É¹¦ºó£¬µ¥Á´±í³¤¶È¼Ó1 
+	q = new Node<ElemType>(e, -1);    // ç”Ÿæˆæ–°ç»“ç‚¹q
+	for (p = head; p.next != -1; p = p->next);	// pæŒ‡å‘è¡¨å°¾ç»“ç‚¹	
+	p->next = q;                        // åœ¨å•é“¾è¡¨çš„è¡¨å°¾ä½ç½®æ’å…¥æ–°ç»“ç‚¹ 
+	length++;							// æ’å…¥æˆåŠŸåï¼Œå•é“¾è¡¨é•¿åº¦åŠ 1 
 
 }
 
@@ -182,9 +181,9 @@ template <class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 template <class ElemType> SLink<ElemType>::SLink(ElemType arr[], int n)
 {
 	max_length = 2 * n + 1;
-	ElemType link = new SNode<ElemType>(max_length);		//ÉêÇëÓĞÁ½±¶¶Ñ¿Õ¼äµÄsllÊı×é
+	ElemType link = new SNode<ElemType>(max_length);		//ç”³è¯·æœ‰ä¸¤å€å †ç©ºé—´çš„sllæ•°ç»„
 
-	link[0] = head;								//°´ÕÕ 0->n Ë³ĞòÉè¶¨nextÎª×ÔÈ»Êı¼¯ Óë²åÈë²»Í¬
+	link[0] = head;								//æŒ‰ç…§ 0->n é¡ºåºè®¾å®šnextä¸ºè‡ªç„¶æ•°é›† ä¸æ’å…¥ä¸åŒ
 	for (int i = 0; i < n; i++)
 	{
 		link[i].next = i + 1;
