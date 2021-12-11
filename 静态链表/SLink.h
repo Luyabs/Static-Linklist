@@ -96,12 +96,12 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 template<class ElemType>
 int SLink<ElemType>::Find(const ElemType& e)
 {
-	int j = 0;
-	for (; node[j].next != avail; j = node[j].next)
+	int j = 0, k = 0;//j游标，k计数
+	for (; node[j].next != avail; j = node[j].next,k++)
 	{
-		if (node[j].data == e) return j;
+		if (node[j].data == e) return k;
 	}
-	if (node[j].data == e) return j;
+	if (node[j].data == e) return k;
 	return -1;
 }
 
