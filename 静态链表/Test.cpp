@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include "SLink.h"
 #include "SNode.h"
 
@@ -14,4 +14,15 @@ int main()
 
     a.Insert(2, 0.95);
     a.Traverse(true);
+
+    a.Reverse();
+    a.Traverse(true);
+
+    a.Delete(3);
+    a.Delete(1);
+    a.Delete(1);
+    a.Delete(1);
+    a.Traverse(true);
+    
+    //cout << a.Find(1.01) << endl;
 }
