@@ -9,7 +9,7 @@ const int RANGE_ERROR = 1001;	//越界抛出1001
 template <class ElemType> class SLink		//当前 单向 非循环  可以之后再改
 {
 protected:
-	SNode<ElemType> *node;		//用node指向堆数组首结点 以此作为静态链表首结点 node[0]与普通链表的首结点类似
+	SNode<ElemType>* node;		//用node指向堆数组首结点 以此作为静态链表首结点 node[0]与普通链表的首结点类似
 	int avail;					//静态链表下一个空位的下标 将除去node[0]外所有没有data的结点 都归为空表 空表的首结点为avail avail起到增删的重要作用
 	int length;					//当前已拥有的结点数(不包括head)
 
@@ -20,14 +20,16 @@ public:
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
 	int Find(const ElemType& e);
+	void Delete(int loc);
+	void Reverse();				//链表倒置
 
 };
 
 
-template<class ElemType> SLink<ElemType>::SLink() : length(0),avail(1)
+template<class ElemType> SLink<ElemType>::SLink() : length(0), avail(1)
 {
 	node = new SNode<ElemType>[MAXSIZE];
-	for (int i = 0; i < MAXSIZE - 1; i++) 
+	for (int i = 0; i < MAXSIZE - 1; i++)
 	{
 		node[i].next = i + 1;		//第i个元素的next指向i+1 最后元素默认指-1
 	}
@@ -44,7 +46,8 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//wri
 	int p = node[0].next;
 	if (write)
 	{
-		if (length > 0)cout << "head ->";
+		//if (length > 0) 
+			cout << "HEAD -> ";
 		while (p != -1 && p != avail)
 		{
 			cout << node[p].data << " -> ";
@@ -56,14 +59,14 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//wri
 	{
 		while (p != -1 && p != avail)
 		{
-			p = node[p].next;
+			p = node[p].next;					//考虑来个return 改个返回类型
 		}
 	}
 }
 
 template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
-	node[avail].data = e;			
+	node[avail].data = e;
 	avail = node[avail].next;		//avail移动到空表的下一个位置
 	length++;
 }
@@ -72,7 +75,7 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 {
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
-	node[avail].data = e;		
+	node[avail].data = e;
 	int j = 0;							//loc处的前一个结点
 	int p = avail;					//记录这个刚有数据的结点
 	avail = node[avail].next;		//avail移动到空表的下一个位置
@@ -82,15 +85,11 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 		j = node[j].next;
 	}
 	int d = j;
-	for (; node[d].next != p; d = node[d].next);
+	while (node[d].next != p)
+		d = node[d].next;
 	node[d].next = avail;
-	if (node[j].next == p)
-	{
-		node[p].next = avail;
-	}
-	else
-		node[p].next = node[j].next;		//断链重连
-	node[j].next = p;				
+	node[p].next = node[j].next;		//断链重连
+	node[j].next = p;
 	length++;
 }
 
@@ -103,13 +102,44 @@ int SLink<ElemType>::Find(const ElemType& e)
 	return -1;
 }
 
+template<class ElemType> void SLink<ElemType>::Delete(int loc) 
+{
+	if (loc < 1 || loc > length + 1)
+		throw RANGE_ERROR;
+	int j = 0;								//loc处的前一个结点
+	for (int i = 0; i < loc - 1; i++)		//找到j
+	{
+		j = node[j].next;
+	}
+	int k = node[j].next;					//记录loc处的结点
+	node[j].next = node[k].next;
+	int p = avail;							//记录原avail
+	avail = k;								//被删的结点自动成为新的avail
+	node[p].next = avail;					//avail间生成联系
+	while (node[j].next != p)				//让j到有数据表的表尾
+		j = node[j].next;
+	node[j].next = avail;					
+	length--;
+}
 
+template<class ElemType> void SLink<ElemType>::Reverse()
+{
+	if (length == 1)
+		return;
+	int p = 0;
+	int q = node[0].next;
+	int r = node[q].next;		//p -> q -> r
+	node[q].next = avail;		//avail只改一次
+	while (r != avail)
+	{
+		p = q;
+		q = r;
+		r = node[r].next;
 
-
-
-
-
-
+		node[q].next = p;
+	}
+	node[0].next = q;
+}
 
 
 
@@ -134,7 +164,7 @@ template <class ElemType>
 class SLink		//当前带头结点 单向 非循环  可以之后再改
 {
 protected:
-	SNode<ElemType> head;		//带头结点	p = link[p.next]相当于p = p->next 
+	SNode<ElemType> head;		//带头结点	p = link[p.next]相当于p = p->next
 	int avail;			//静态链表空位的下标
 	int length;			//当前已拥有的结点数(不包括head)
 	int max_length;		//最多能拥有的结点数(包括了head)(由初始所申请的动态内存决定)
@@ -162,16 +192,16 @@ template <class ElemType> SLink<ElemType>::SLink()
 {
 	head = new SNode<ElemType>;		//构造空头
 	avail = -1;					//链表没有空位
-	length = 0;						
+	length = 0;
 }
 
 template <class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
 	SNode<ElemType> p, q;
 	q = new Node<ElemType>(e, -1);    // 生成新结点q
-	for (p = head; p.next != -1; p = p->next);	// p指向表尾结点	
-	p->next = q;                        // 在单链表的表尾位置插入新结点 
-	length++;							// 插入成功后，单链表长度加1 
+	for (p = head; p.next != -1; p = p->next);	// p指向表尾结点
+	p->next = q;                        // 在单链表的表尾位置插入新结点
+	length++;							// 插入成功后，单链表长度加1
 
 }
 
