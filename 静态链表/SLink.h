@@ -97,7 +97,10 @@ template<class ElemType>
 int SLink<ElemType>::Find(const ElemType& e)
 {
 	int j = 0;
-	for (; node[j].next != avail; j = node[j].next);
+	for (; node[j].next != avail; j = node[j].next)
+	{
+		if (node[j].data == e) return j;
+	}
 	if (node[j].data == e) return j;
 	return -1;
 }
