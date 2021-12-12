@@ -20,6 +20,7 @@ public:
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
 	int Find(const ElemType& e);
+	int Length();
 	void Delete(int loc);
 	void Reverse();				//链表倒置
         void Sort();
@@ -106,6 +107,12 @@ int SLink<ElemType>::Find(const ElemType& e)
 	return -1;
 }
 
+template<class ElemType>
+int SLink<ElemType>::Length()
+{
+	return this->length;
+}
+
 template<class ElemType> void SLink<ElemType>::Delete(int loc) 
 {
 	if (loc < 1 || loc > length + 1)
@@ -128,7 +135,7 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 
 template<class ElemType> void SLink<ElemType>::Reverse()
 {
-	if (length == 1)
+	if (length <= 1)
 		return;
 	int p = 0;
 	int q = node[0].next;
@@ -148,7 +155,7 @@ template<class ElemType> void SLink<ElemType>::Reverse()
 template<class ElemType>
 void SLink<ElemType>::Sort()
 {
-	if (length == 1) return;
+	if (length <= 1) return;
 	int p = node[0].next;
 	for (int q = p; q != avail; q = p)
 	{
