@@ -22,6 +22,7 @@ public:
 	int Find(const ElemType& e);
 	void Delete(int loc);
 	void Reverse();				//链表倒置
+        void Sort();
 
 };
 
@@ -144,6 +145,24 @@ template<class ElemType> void SLink<ElemType>::Reverse()
 	node[0].next = q;
 }
 
+template<class ElemType>
+void SLink<ElemType>::Sort()
+{
+	if (length == 1) return;
+	int p = node[0].next;
+	for (int q = p; q != avail; q = p)
+	{
+		for (int r = q; r != avail; r = node[r].next)
+		{
+			if (node[q].data > node[r].data)
+				q = r;
+		}
+		ElemType Temp = node[p].data;
+		node[p].data = node[q].data;
+		node[q].data = Temp;
+		p = node[p].next;
+	}
+}
 
 
 
