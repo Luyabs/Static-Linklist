@@ -31,7 +31,7 @@ public:
 
 };
 
-template<class ElemType> SLink<ElemType>::SLink() : length(0), avail(1), maxsize(MAX_SIZE)
+template<class ElemType> SLink<ElemType>::SLink() : length(0), avail(1), maxsize(MAXSIZE)
 {
 	node = new SNode<ElemType>[maxsize];
 	for (int i = 0; i < maxsize - 1; i++)
@@ -187,7 +187,7 @@ void SLink<ElemType>::Sort()
 		p = node[p].next;
 	}
 }
-
+/*
 template<class ElemType>
 void SLink<ElemType>::Enlarge(const int L)
 {
@@ -204,7 +204,7 @@ void SLink<ElemType>::Enlarge(const int L)
 	delete[] node;
 	node = nNode;
 }
-
+*/
 
 
 
