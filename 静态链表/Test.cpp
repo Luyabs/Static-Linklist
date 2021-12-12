@@ -13,6 +13,7 @@ int main()
     a.Traverse(true);
 
     a.Insert(2, 0.95);
+    a.Sort();
     a.Traverse(true);
 
     a.Reverse();
