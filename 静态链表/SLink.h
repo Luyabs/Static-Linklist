@@ -115,7 +115,7 @@ int SLink<ElemType>::Length()
 	return this->length;
 }
 
-template<class ElemType> void SLink<ElemType>::Delete(int loc)
+template<class ElemType> void SLink<ElemType>::Delete(int loc) 
 {
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
@@ -128,10 +128,10 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 	node[j].next = node[k].next;
 	int p = avail;							//记录原avail
 	avail = k;								//被删的结点自动成为新的avail
-	node[p].next = avail;					//avail间生成联系
+	node[k].next = p;					//avail间生成联系
 	while (node[j].next != p)				//让j到有数据表的表尾
 		j = node[j].next;
-	node[j].next = avail;
+	node[j].next = avail;					
 	length--;
 }
 
