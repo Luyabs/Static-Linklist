@@ -4,7 +4,8 @@
 using namespace std;
 
 const int MAXSIZE = 100;		//每次申请堆数组的大小
-const int RANGE_ERROR = 1001;	//越界抛出1001
+const int RANGE_ERROR = 1001;		//越界抛出1001
+const int OVER_FLOW = 1002；	       //length > maxlength时 抛出1002
 
 template <class ElemType> class SLink		//当前 单向 非循环  可以之后再改
 {
@@ -12,9 +13,11 @@ protected:
 	SNode<ElemType>* node;		//用node指向堆数组首结点 以此作为静态链表首结点 node[0]与普通链表的首结点类似
 	int avail;					//静态链表下一个空位的下标 将除去node[0]外所有没有data的结点 都归为空表 空表的首结点为avail avail起到增删的重要作用
 	int length;					//当前已拥有的结点数(不包括head)
+	int maxsize;
 
 public:
 	SLink();					//分配空间 用next把结点连在一起 创造空表 
+	SLink(const SLink &link);
 	virtual ~SLink();
 	void Traverse(bool write = true) const;		//遍历(输出/不输出)
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
@@ -28,14 +31,25 @@ public:
 
 };
 
-
-template<class ElemType> SLink<ElemType>::SLink() : length(0), avail(1)
+template<class ElemType> SLink<ElemType>::SLink() : length(0), avail(1), maxsize(MAX_SIZE)
 {
-	node = new SNode<ElemType>[MAXSIZE];
-	for (int i = 0; i < MAXSIZE - 1; i++)
+	node = new SNode<ElemType>[maxsize];
+	for (int i = 0; i < maxsize - 1; i++)
 	{
 		node[i].next = i + 1;		//第i个元素的next指向i+1 最后元素默认指-1
 	}
+}
+
+template<class ElemType> SLink<ElemType>::SLink(const SLink& link)
+{
+	node = new SNode<ElemType>[link.maxsize];
+	for (int i = 0; i < link.maxsize; i++)
+	{
+		node[i] = link.node[i];
+	}
+	avail = link.avail;
+	length = link.length;
+	maxsize = link.maxsize;
 }
 
 template<class ElemType> SLink<ElemType>::~SLink()
@@ -66,6 +80,7 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//wri
 		}
 	}
 }
+
 template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
 	if (length >= maxsize) throw OVER_FLOW;
@@ -112,7 +127,7 @@ int SLink<ElemType>::Find(const ElemType& e)
 template<class ElemType>
 int SLink<ElemType>::Length()
 {
-	return this->length;
+	return length;
 }
 
 template<class ElemType> void SLink<ElemType>::Delete(int loc) 
