@@ -5,7 +5,7 @@ using namespace std;
 
 const int MAXSIZE = 100;		//每次申请堆数组的大小
 const int RANGE_ERROR = 1001;		//越界抛出1001
-const int OVER_FLOW = 1002；	       //length > maxlength时 抛出1002
+const int OVER_FLOW = 1002;	       //length > maxlength时 抛出1002
 
 template <class ElemType> class SLink		//当前 单向 非循环  可以之后再改
 {
