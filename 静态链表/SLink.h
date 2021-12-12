@@ -124,6 +124,7 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 	}
 	int k = node[j].next;					//记录loc处的结点
 	node[j].next = node[k].next;
+	node[k].next = avail;					//被删结点指向原avail
 	int p = avail;							//记录原avail
 	avail = k;								//被删的结点自动成为新的avail
 	node[p].next = avail;					//avail间生成联系
