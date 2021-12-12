@@ -24,6 +24,7 @@ public:
 	void Delete(int loc);
 	void Reverse();				//链表倒置
         void Sort();
+	void Enlarge(const int L);
 
 };
 
@@ -65,9 +66,9 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//wri
 		}
 	}
 }
-
 template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
+	if (length >= maxsize) throw OVER_FLOW;
 	node[avail].data = e;
 	avail = node[avail].next;		//avail移动到空表的下一个位置
 	length++;
@@ -75,6 +76,7 @@ template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 
 template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e)
 {
+	if (length >= maxsize) throw OVER_FLOW;
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
 	node[avail].data = e;
@@ -113,7 +115,7 @@ int SLink<ElemType>::Length()
 	return this->length;
 }
 
-template<class ElemType> void SLink<ElemType>::Delete(int loc) 
+template<class ElemType> void SLink<ElemType>::Delete(int loc)
 {
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
@@ -124,13 +126,12 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 	}
 	int k = node[j].next;					//记录loc处的结点
 	node[j].next = node[k].next;
-	node[k].next = avail;					//被删结点指向原avail
 	int p = avail;							//记录原avail
 	avail = k;								//被删的结点自动成为新的avail
 	node[p].next = avail;					//avail间生成联系
 	while (node[j].next != p)				//让j到有数据表的表尾
 		j = node[j].next;
-	node[j].next = avail;					
+	node[j].next = avail;
 	length--;
 }
 
@@ -172,11 +173,22 @@ void SLink<ElemType>::Sort()
 	}
 }
 
-
-
-
-
-
+template<class ElemType>
+void SLink<ElemType>::Enlarge(const int L)
+{
+	if (L <= maxsize) return;
+	SNode<ElemType>* nNode = new SNode<ElemType>[L];
+	for (int i = 0; i < max; i++)
+	{
+		nNode[i] = node[i];
+	}
+	for (int i = maxsize; i < L; i++)
+	{
+		nNode[i].next = i + 1;
+	}
+	delete[] node;
+	node = nNode;
+}
 
 
 
