@@ -28,6 +28,7 @@ public:
 	void Reverse();				//链表倒置
         void Sort();
 	void Enlarge(const int L);
+	SLink<ElemType>& operator = (const SLink<ElemType>& S);
 
 };
 
@@ -187,13 +188,12 @@ void SLink<ElemType>::Sort()
 		p = node[p].next;
 	}
 }
-/*
 template<class ElemType>
 void SLink<ElemType>::Enlarge(const int L)
 {
 	if (L <= maxsize) return;
 	SNode<ElemType>* nNode = new SNode<ElemType>[L];
-	for (int i = 0; i < max; i++)
+	for (int i = 0; i < maxsize; i++)
 	{
 		nNode[i] = node[i];
 	}
@@ -203,8 +203,24 @@ void SLink<ElemType>::Enlarge(const int L)
 	}
 	delete[] node;
 	node = nNode;
+	maxsize = L;
 }
-*/
+
+template<class ElemType>
+SLink<ElemType>& SLink<ElemType>::operator=(const SLink<ElemType>& S)
+{
+	if (this == &S) return *this;
+	delete[] node;
+	length = S.length;
+	maxsize = S.maxsize;
+	node = new SNode<ElemType>[maxsize];
+	for (int i = 0; i < maxsize; i++)
+	{
+		node[i] = S.node[i];
+	}
+	avail = S.avail;
+}
+
 
 
 
