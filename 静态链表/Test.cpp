@@ -9,7 +9,7 @@ int main()
 	cout << "先检验从数组转换构造和深拷贝构造:" << endl;
 	double array[10];
 	for (int i = 0; i < 10; i++)
-		array[i] = i;
+		array[i] = 10-i;
 	SLink<double> linktemplate(array, 10);
 	SLink<double> linkcopystruction(linktemplate);
 	linktemplate.Traverse();
@@ -17,7 +17,7 @@ int main()
 	cout << "没有错误" << endl;
 
 
-	SLink<double> link;	
+	SLink<double> link;
 	char c = '$';	//switch控制符
 	double e = 0;	//元素
 	int i;			//位置
@@ -41,7 +41,7 @@ int main()
 		cout << endl << "d. 从文件中读取链表(会重置链表)";
 		cout << endl << "e. 覆盖保存链表到文件";
 		cout << endl << "0. 退出";
-		cout << endl << "选择功能(0~9,a~e):";
+		cout << endl << "选择功能(0~9,a~e,x):";
 		cin >> c;
 		switch (c)
 		{
@@ -64,6 +64,7 @@ int main()
 		case 'x':
 			link.Reset();
 			link = linktemplate;
+			cout << "从最上方链表深赋值静态链表" << endl;
 			break;
 		case '2':
 			link.Traverse(true, cout);
@@ -77,7 +78,7 @@ int main()
 			{
 				link.Set(i, e);
 				cout << "设置成功." << endl;
-			}	
+			}
 			catch (int)
 			{
 				cout << "位置范围错." << endl;
@@ -91,7 +92,7 @@ int main()
 				e = link.Delete(i);
 				cout << "元素 " << e << " 已删除" << endl;
 			}
-			catch(int)
+			catch (int)
 			{
 				cout << "删除的元素位置不在链表存储范围内" << endl;
 			}
@@ -109,7 +110,7 @@ int main()
 			{
 				if (err == OVER_FLOW)
 					cout << "当前链表长度达到最大长度，需要先扩容才能插入新的值" << endl;
-				else if(err == RANGE_ERROR)
+				else if (err == RANGE_ERROR)
 					cout << "插入的元素位置出现错误" << endl;
 			}
 			break;
@@ -140,7 +141,7 @@ int main()
 			break;
 		case '9':
 			link.Reset();
-			if(link.Length() == 0)
+			if (link.Length() == 0)
 				cout << endl << "链表已重置" << endl;
 			else
 				cout << endl << "链表未重置，错误待发现" << endl;
@@ -174,8 +175,15 @@ int main()
 		case 'c':
 			cout << endl << "将链表的最大容量扩容至(至少大于" << MAXSIZE << "):";
 			cin >> i;
-			link.Enlarge(i);
-			cout << endl << "扩容成功：" << endl;
+			try
+			{ 
+				link.Enlarge(i);
+			    cout << endl << "扩容成功" << endl;
+			}
+			catch (int)
+			{
+				cout << endl << "链表的最大容量扩容至(至少大于" << MAXSIZE << "):";
+			}
 			break;
 		case 'd':
 			cout << endl << "正在从" << filename << "文件中读取链表";
