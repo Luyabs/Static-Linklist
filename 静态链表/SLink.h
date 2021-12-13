@@ -7,6 +7,7 @@ using namespace std;
 const int MAXSIZE = 100;		//每次申请堆数组的大小
 const int RANGE_ERROR = 1001;		//越界抛出1001
 const int OVER_FLOW = 1002;	       //length > maxlength时 抛出1002
+const int NOT_FOUND = 1003;
 
 template <class ElemType> class SLink		//当前 单向 非循环  可以之后再改
 {
@@ -24,9 +25,10 @@ public:
 	void Traverse(bool mode = 1, ostream& out = cout) const;		//mode == 1 用->格式直观地输出链表, mode == 0 用方便文件读取的格式输出
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
+	void Set(int loc, const ElemType& e);
 	int Find(const ElemType& e)const;
 	int Length()const;
-	void Delete(int loc);
+	ElemType Delete(int loc);
 	void Reset();				//恢复初始状态
 	void Reverse();				//链表倒置
 	void Sort();
@@ -116,7 +118,7 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool mode, ostream& out
 
 template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 {
-	if (length >= maxsize) throw OVER_FLOW;
+	if (length >= maxsize-1) throw OVER_FLOW;
 	node[avail].data = e;
 	avail = node[avail].next;		//avail移动到空表的下一个位置
 	length++;
@@ -124,7 +126,7 @@ template<class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
 
 template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e)
 {
-	if (length >= maxsize) throw OVER_FLOW;
+	if (length >= maxsize-1) throw OVER_FLOW;
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
 	node[avail].data = e;
@@ -146,6 +148,16 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 }
 
 template<class ElemType>
+void SLink<ElemType>::Set(int loc, const ElemType& e)
+{
+	if (loc < 1 || loc > length + 1)
+		throw RANGE_ERROR;
+	int j = 1;
+	for (int i = 1; i < loc; i++, j = node[j].next);
+	node[j].data = e;
+}
+
+template<class ElemType>
 int SLink<ElemType>::Find(const ElemType& e) const
 {
 	int j = 0, k = 0;//j游标，k计数
@@ -154,7 +166,7 @@ int SLink<ElemType>::Find(const ElemType& e) const
 		if (node[j].data == e) return k;
 	}
 	if (node[j].data == e) return k;
-	return -1;
+	return NOT_FOUND;
 }
 
 template<class ElemType>
@@ -163,8 +175,9 @@ int SLink<ElemType>::Length() const
 	return length;
 }
 
-template<class ElemType> void SLink<ElemType>::Delete(int loc)
+template<class ElemType> ElemType SLink<ElemType>::Delete(int loc)
 {
+	ElemType e;
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
 	int j = 0;								//loc处的前一个结点
@@ -173,6 +186,7 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 		j = node[j].next;
 	}
 	int k = node[j].next;					//记录loc处的结点
+	e = node[k].data;
 	node[j].next = node[k].next;
 	int p = avail;							//记录原avail
 	avail = k;								//被删的结点自动成为新的avail
@@ -181,6 +195,7 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 		j = node[j].next;
 	node[j].next = avail;
 	length--;
+	return e;
 }
 
 template<class ElemType> void SLink<ElemType>::Reset()
