@@ -18,24 +18,24 @@ protected:
 
 public:
 	SLink();					//分配空间 用next把结点连在一起 创造空表 
-	SLink(const SLink &link);
-	SLink(const ElemType* E,const int& size);
+	SLink(const SLink& link);
+	SLink(const ElemType* E, const int& size);
 	virtual ~SLink();
 	void Traverse(bool mode = 1, ostream& out = cout) const;		//mode == 1 用->格式直观地输出链表, mode == 0 用方便文件读取的格式输出
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
-	int Find(const ElemType& e);
-	int Length();
+	int Find(const ElemType& e)const;
+	int Length()const;
 	void Delete(int loc);
 	void Reset();				//恢复初始状态
 	void Reverse();				//链表倒置
-        void Sort();
+	void Sort();
 	void Enlarge(const int L);
 	SLink<ElemType>& operator = (const SLink<ElemType>& S);
-	
-	void Save(const char* filename);	//文件输出
+
+	void Save(const char* filename)const;	//文件输出
 	void Load(const char* filename);	//文件读取
-	
+
 	template<class ElemType> friend istream& operator >>(istream& in, SLink<ElemType>& link);
 };
 
@@ -64,17 +64,17 @@ template<class ElemType> SLink<ElemType>::SLink(const SLink& link)
 }
 
 template<class ElemType>
-SLink<ElemType>::SLink(const ElemType* E, const int& size):maxsize(MAXSIZE),length(size)
+SLink<ElemType>::SLink(const ElemType* E, const int& size) :maxsize(MAXSIZE), length(size)
 {
 	if (length >= maxsize) maxsize = length + 100;
 	node = new SNode<ElemType>[maxsize];
 	node[0].next = 1;
 	for (int i = 0; i < length; i++)
 	{
-		node[i+1].data = E[i];
-		node[i+1].next = i + 2;
+		node[i + 1].data = E[i];
+		node[i + 1].next = i + 2;
 	}
-	avail = length+1;
+	avail = length + 1;
 	for (int i = avail; i < maxsize - 1; i++)
 	{
 		node[i].next = i + 1;		//第i个元素的next指向i+1 最后元素默认指-1
@@ -108,7 +108,7 @@ template <class ElemType> void SLink<ElemType>::Traverse(bool mode, ostream& out
 		while (p != -1 && p != avail)
 		{
 			out << node[p].data << '\t';
-			p = node[p].next;					
+			p = node[p].next;
 		}
 		out << endl;
 	}
@@ -146,10 +146,10 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 }
 
 template<class ElemType>
-int SLink<ElemType>::Find(const ElemType& e)
+int SLink<ElemType>::Find(const ElemType& e) const
 {
 	int j = 0, k = 0;//j游标，k计数
-	for (; node[j].next != avail; j = node[j].next,k++)
+	for (; node[j].next != avail; j = node[j].next, k++)
 	{
 		if (node[j].data == e) return k;
 	}
@@ -158,12 +158,12 @@ int SLink<ElemType>::Find(const ElemType& e)
 }
 
 template<class ElemType>
-int SLink<ElemType>::Length()
+int SLink<ElemType>::Length() const
 {
 	return length;
 }
 
-template<class ElemType> void SLink<ElemType>::Delete(int loc) 
+template<class ElemType> void SLink<ElemType>::Delete(int loc)
 {
 	if (loc < 1 || loc > length + 1)
 		throw RANGE_ERROR;
@@ -179,7 +179,7 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 	node[k].next = p;					//avail间生成联系
 	while (node[j].next != p)				//让j到有数据表的表尾
 		j = node[j].next;
-	node[j].next = avail;					
+	node[j].next = avail;
 	length--;
 }
 
@@ -270,28 +270,28 @@ template <class ElemType> ostream& operator <<(ostream& out, const SLink<ElemTyp
 	return out;
 }
 
-template <class ElemType> void SLink<ElemType>::Save(const char* filename)		// 将链表所有结点的数据写入指定文件
+template <class ElemType> void SLink<ElemType>::Save(const char* filename) const		// 将链表所有结点的数据写入指定文件
 {
 	ofstream outfile;
 	outfile.open(filename);
 	if (outfile.fail())
-		return ;
+		return;
 	outfile << *this;
 	outfile.close();
 }
-/*
+
 template<class ElemType> istream& operator >>(istream& in, SLink<ElemType>& link)
 {
 	link.Reset();
 	int n;
 	in >> n;
-	for (int i = 0; i < n; i++)
+	for (int i = 1; i < n; i++)
 	{
 		in >> link.node[i].data;
 	}
+	link.avail = n;
 	return in;
 }
-
 template <class ElemType> void SLink<ElemType>::Load(const char* filename)		// 从指定文件中读取数据，构造链表
 {
 	ifstream infile(filename);
@@ -299,5 +299,4 @@ template <class ElemType> void SLink<ElemType>::Load(const char* filename)		// �
 		return;
 	infile >> *this;
 	infile.close();
-}*/
-
+}
