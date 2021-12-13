@@ -263,7 +263,7 @@ void SLink<ElemType>::Sort()
 template<class ElemType>
 void SLink<ElemType>::Enlarge(const int L)
 {
-	if (L <= maxsize) return;
+	if (L <= maxsize) throw RANGE_ERROR;
 	SNode<ElemType>* nNode = new SNode<ElemType>[L];
 	for (int i = 0; i < maxsize; i++)
 	{
