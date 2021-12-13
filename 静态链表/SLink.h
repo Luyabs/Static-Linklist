@@ -1,6 +1,7 @@
 #pragma once
 #include "SNode.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 const int MAXSIZE = 100;		//每次申请堆数组的大小
@@ -18,6 +19,7 @@ protected:
 public:
 	SLink();					//分配空间 用next把结点连在一起 创造空表 
 	SLink(const SLink &link);
+	SLink(const ElemType* E,const int& size);
 	virtual ~SLink();
 	void Traverse(bool mode = 1, ostream& out = cout) const;		//mode == 1 用->格式直观地输出链表, mode == 0 用方便文件读取的格式输出
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
@@ -60,6 +62,25 @@ template<class ElemType> SLink<ElemType>::SLink(const SLink& link)
 	length = link.length;
 	maxsize = link.maxsize;
 }
+
+template<class ElemType>
+SLink<ElemType>::SLink(const ElemType* E, const int& size):maxsize(MAXSIZE),length(size)
+{
+	if (length >= maxsize) maxsize = length + 100;
+	node = new SNode<ElemType>[maxsize];
+	node[0].next = 1;
+	for (int i = 0; i < length; i++)
+	{
+		node[i+1].data = E[i];
+		node[i+1].next = i + 2;
+	}
+	avail = length+1;
+	for (int i = avail; i < maxsize - 1; i++)
+	{
+		node[i].next = i + 1;		//第i个元素的next指向i+1 最后元素默认指-1
+	}
+}
+
 
 template<class ElemType> SLink<ElemType>::~SLink()
 {
