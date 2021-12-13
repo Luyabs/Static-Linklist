@@ -27,6 +27,7 @@ public:
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
 	void Set(int loc, const ElemType& e);
 	int Find(const ElemType& e)const;
+	ElemType Search(const int loc)const;
 	int Length()const;
 	ElemType Delete(int loc);
 	void Reset();				//恢复初始状态
@@ -167,6 +168,19 @@ int SLink<ElemType>::Find(const ElemType& e) const
 	}
 	if (node[j].data == e) return k;
 	return NOT_FOUND;
+}
+
+template<class ElemType>
+ElemType SLink<ElemType>::Search(const int loc) const
+{
+	if (loc < 1 || loc > length)
+		throw RANGE_ERROR;
+	int j = node[0].next;
+	for (int i = 1; i < loc; i++)
+	{
+		j = node[j].next;
+	}
+	return node[j].data;
 }
 
 template<class ElemType>
