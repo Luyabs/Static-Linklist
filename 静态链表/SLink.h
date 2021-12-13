@@ -19,18 +19,26 @@ public:
 	SLink();					//分配空间 用next把结点连在一起 创造空表 
 	SLink(const SLink &link);
 	virtual ~SLink();
-	void Traverse(bool write = true) const;		//遍历(输出/不输出)
+	void Traverse(bool mode = 1, ostream& out = cout) const;		//mode == 1 用->格式直观地输出链表, mode == 0 用方便文件读取的格式输出
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
 	int Find(const ElemType& e);
 	int Length();
 	void Delete(int loc);
+	void Reset();				//恢复初始状态
 	void Reverse();				//链表倒置
         void Sort();
 	void Enlarge(const int L);
 	SLink<ElemType>& operator = (const SLink<ElemType>& S);
-
+	
+	void Save(const char* filename);	//文件输出
+	void Load(const char* filename);	//文件读取
+	
+	template<class ElemType> friend istream& operator >>(istream& in, SLink<ElemType>& link);
 };
+
+template<class ElemType> ostream& operator <<(ostream& out, const SLink<ElemType>& link);
+
 
 template<class ElemType> SLink<ElemType>::SLink() : length(0), avail(1), maxsize(MAXSIZE)
 {
@@ -59,26 +67,29 @@ template<class ElemType> SLink<ElemType>::~SLink()
 	length = 0;
 }
 
-template <class ElemType> void SLink<ElemType>::Traverse(bool write) const	//write == 1 输出一遍链表, write == 0 仅移动到表尾
+template <class ElemType> void SLink<ElemType>::Traverse(bool mode, ostream& out) const	//mode == 1 用->格式直观地输出链表, mode == 0 用方便文件读取的格式输出链表
 {
 	int p = node[0].next;
-	if (write)
+	if (mode)
 	{
 		//if (length > 0) 
-			cout << "HEAD -> ";
+		out << "HEAD -> ";
 		while (p != -1 && p != avail)
 		{
-			cout << node[p].data << " -> ";
+			out << node[p].data << " -> ";
 			p = node[p].next;
 		}
-		cout << "NULL" << endl;
+		out << "NULL" << endl;
 	}
 	else
 	{
+		out << length + 1 << '\t';
 		while (p != -1 && p != avail)
 		{
-			p = node[p].next;					//考虑来个return 改个返回类型
+			out << node[p].data << '\t';
+			p = node[p].next;					
 		}
+		out << endl;
 	}
 }
 
@@ -151,6 +162,17 @@ template<class ElemType> void SLink<ElemType>::Delete(int loc)
 	length--;
 }
 
+template<class ElemType> void SLink<ElemType>::Reset()
+{
+	for (int i = 0; i < maxsize - 1; i++)
+	{
+		node[i].next = i + 1;		//第i个元素的next指向i+1 最后元素默认指-1
+	}
+	avail = 1;
+	length = 0;
+	maxsize = MAXSIZE;
+}
+
 template<class ElemType> void SLink<ElemType>::Reverse()
 {
 	if (length <= 1)
@@ -221,102 +243,40 @@ SLink<ElemType>& SLink<ElemType>::operator=(const SLink<ElemType>& S)
 	avail = S.avail;
 }
 
+template <class ElemType> ostream& operator <<(ostream& out, const SLink<ElemType>& link)
+{
+	link.Traverse(0, out);
+	return out;
+}
 
-
-
-
-
-
-
-
-
-
-
+template <class ElemType> void SLink<ElemType>::Save(const char* filename)		// 将链表所有结点的数据写入指定文件
+{
+	ofstream outfile;
+	outfile.open(filename);
+	if (outfile.fail())
+		return ;
+	outfile << *this;
+	outfile.close();
+}
 /*
-template <class ElemType>
-class SLink		//当前带头结点 单向 非循环  可以之后再改
+template<class ElemType> istream& operator >>(istream& in, SLink<ElemType>& link)
 {
-protected:
-	SNode<ElemType> head;		//带头结点	p = link[p.next]相当于p = p->next
-	int avail;			//静态链表空位的下标
-	int length;			//当前已拥有的结点数(不包括head)
-	int max_length;		//最多能拥有的结点数(包括了head)(由初始所申请的动态内存决定)
-
-public:
-	//基本辅助函数: 判空,清空,返回长度/最大长度,遍历 等
-
-	//基本功能函数：增,删,改,查,倒置,合并,排序 等
-	void SLink<ElemType>::Insert(const ElemType& e);		//尾插
-
-	//考虑为Max_length扩容(重新分配更大的内存空间 → copy → delete)  或者 考虑让两个不同的静态链表建立联系来扩容
-
-	//运算符 + 输入输出流重载
-
-	//四大函数
-	SLink();
-	SLink(ElemType arr[], int n);
-	virtual ~SLink();
-	SLink(const SLink<ElemType>& link);
-	SLink<ElemType>& operator = (const SLink<ElemType>& link);
-
-};
-
-template <class ElemType> SLink<ElemType>::SLink()
-{
-	head = new SNode<ElemType>;		//构造空头
-	avail = -1;					//链表没有空位
-	length = 0;
-}
-
-template <class ElemType> void SLink<ElemType>::Insert(const ElemType& e)
-{
-	SNode<ElemType> p, q;
-	q = new Node<ElemType>(e, -1);    // 生成新结点q
-	for (p = head; p.next != -1; p = p->next);	// p指向表尾结点
-	p->next = q;                        // 在单链表的表尾位置插入新结点
-	length++;							// 插入成功后，单链表长度加1
-
-}
-
-
-
-
-template <class ElemType> SLink<ElemType>::SLink(ElemType arr[], int n)
-{
-	max_length = 2 * n + 1;
-	ElemType link = new SNode<ElemType>(max_length);		//申请有两倍堆空间的sll数组
-
-	link[0] = head;								//按照 0->n 顺序设定next为自然数集 与插入不同
+	link.Reset();
+	int n;
+	in >> n;
 	for (int i = 0; i < n; i++)
 	{
-		link[i].next = i + 1;
-		link[link[i].next].data = arr[i];
+		in >> link.node[i].data;
 	}
-	length = n;
+	return in;
 }
 
-template <class ElemType> SLink<ElemType>::~SLink()
+template <class ElemType> void SLink<ElemType>::Load(const char* filename)		// 从指定文件中读取数据，构造链表
 {
-	//Clear();
-	delete[]head;
-}
-
-
-template <class ElemType> SLink<ElemType>::SLink(const SLink<ElemType>& link2)
-{
-	max_length = link2.max_length;
-	ElemType link = new SNode<ElemType>(max_length);
-	ElemType p = link[0] = head;
-	ElemType p2 = link2.head;
-	p.next = p2.next;
-
-	for (int i = 0; i < link2.length; i++)
-	{
-		//p = link2[p.next];
-		link[p.next].data = link2[p2.next].data;
-		link[p.next].next = link2[p2.next].next;
-		p = link[p.next];
-		p2 = link2[p2.next];
-	}
-	length = n;
+	ifstream infile(filename);
+	if (infile.fail())
+		return;
+	infile >> *this;
+	infile.close();
 }*/
+
