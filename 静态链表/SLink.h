@@ -155,7 +155,7 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 template<class ElemType>
 void SLink<ElemType>::Set(int loc, const ElemType& e)
 {
-	if (loc < 1 || loc > length + 1)
+	if (loc < 1 || loc > length)
 		throw RANGE_ERROR;
 	int j = 1;
 	for (int i = 1; i < loc; i++, j = node[j].next);
@@ -196,7 +196,7 @@ int SLink<ElemType>::Length() const
 template<class ElemType> ElemType SLink<ElemType>::Delete(int loc)
 {
 	ElemType e;
-	if (loc < 1 || loc > length + 1)
+	if (loc < 1 || loc > length)
 		throw RANGE_ERROR;
 	int j = 0;								//loc处的前一个结点
 	for (int i = 0; i < loc - 1; i++)		//找到j
