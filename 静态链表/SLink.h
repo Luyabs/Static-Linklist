@@ -4,7 +4,7 @@
 #include <fstream>
 using namespace std;
 
-const int MAXSIZE = 100;		//每次申请堆数组的大小
+const int MAXSIZE = 7;			//每次申请堆数组的大小
 const int RANGE_ERROR = 1001;		//越界抛出1001
 const int OVER_FLOW = 1002;	       //length > maxlength时 抛出1002
 const int NOT_FOUND = 1003;
@@ -69,7 +69,11 @@ template<class ElemType> SLink<ElemType>::SLink(const SLink& link)
 template<class ElemType>
 SLink<ElemType>::SLink(const ElemType* E, const int& size) :maxsize(MAXSIZE), length(size)
 {
-	if (length >= maxsize) maxsize = length + 100;
+	while (length >= maxsize) 
+	{
+		maxsize = length *2;
+		cout << endl << "扩容成功" << endl;
+	}
 	node = new SNode<ElemType>[maxsize];
 	node[0].next = 1;
 	for (int i = 0; i < length; i++)
