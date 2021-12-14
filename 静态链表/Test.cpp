@@ -23,7 +23,7 @@ int main()
 	int i;			//位置
 	const char* filename = "SList.txt";		//保存文件
 
-	while (c != 0)
+	while (c != '0')
 	{
 		cout << endl << "1. 生成静态链表(会重置链表).";
 		cout << endl << "x. 从已有静态链表生成静态链表(会重置链表).";
@@ -57,6 +57,7 @@ int main()
 				catch (int)
 				{
 					cout << "当前链表长度达到最大长度，需要先扩容才能插入新的值" << endl;
+					break;
 				}
 				cin >> e;
 			}
