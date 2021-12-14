@@ -20,21 +20,21 @@ protected:
 public:
 	SLink();					//分配空间 用next把结点连在一起 创造空表 
 	SLink(const SLink& link);
-	SLink(const ElemType* E, const int& size);
+	SLink(const ElemType* E, const int& size);      //转换构造，第二个参数应为数组的大小
 	virtual ~SLink();
 	void Traverse(bool mode = 1, ostream& out = cout) const;		//mode == 1 用->格式直观地输出链表, mode == 0 用方便文件读取的格式输出
 	void Insert(const ElemType& e);				//尾插法 //插入完成后 avail自动向后移，删除完成后 avail变到被删处的位置 
 	void Insert(int loc, const ElemType& e);		//插入，使e成为链表第loc个元素(不算head)
-	void Set(int loc, const ElemType& e);
-	int Find(const ElemType& e)const;
-	ElemType Search(const int loc)const;
-	int Length()const;
-	ElemType Delete(int loc);
+	void Set(int loc, const ElemType& e);                   //修改指定位置的元素
+	int Find(const ElemType& e)const;                       //查找元素，返回第一个找到的元素在链表中的位置
+	ElemType Search(const int loc)const;                    //按位置查找元素
+	int Length()const;                                      //返回长度
+	ElemType Delete(int loc);                               //删除指定位置元素
 	void Reset();				//恢复初始状态
 	void Reverse();				//链表倒置
-	void Sort();
-	void Enlarge(const int L);
-	SLink<ElemType>& operator = (const SLink<ElemType>& S);
+	void Sort();                            //排序
+	void Enlarge(const int L);              //扩容
+	SLink<ElemType>& operator = (const SLink<ElemType>& S); //重载赋值运算符
 
 	void Save(const char* filename)const;	//文件输出
 	void Load(const char* filename);	//文件读取
@@ -67,21 +67,21 @@ template<class ElemType> SLink<ElemType>::SLink(const SLink& link)
 }
 
 template<class ElemType>
-SLink<ElemType>::SLink(const ElemType* E, const int& size) :maxsize(MAXSIZE), length(size)
+SLink<ElemType>::SLink(const ElemType* E, const int& size) :maxsize(MAXSIZE), length(size)  //maxsize的初始化为设定好的常量
 {
-	while (length >= maxsize) 
+	while (length >= maxsize)                                    //如果数组大小超出maxsize则进行扩容
 	{
-		maxsize = length *2;
+		maxsize = length *2;                                 //扩容为length的2倍
 		cout << endl << "扩容成功" << endl;
 	}
-	node = new SNode<ElemType>[maxsize];
-	node[0].next = 1;
+	node = new SNode<ElemType>[maxsize];                         //申请空间
+	node[0].next = 1;                                            //头节点不放数据，单独处理
 	for (int i = 0; i < length; i++)
 	{
 		node[i + 1].data = E[i];
 		node[i + 1].next = i + 2;
 	}
-	avail = length + 1;
+	avail = length + 1;                                          //avail指向最后一个有数据结点的下一个
 	for (int i = avail; i < maxsize - 1; i++)
 	{
 		node[i].next = i + 1;		//第i个元素的next指向i+1 最后元素默认指-1
@@ -155,11 +155,11 @@ template<class ElemType> void SLink<ElemType>::Insert(int loc, const ElemType& e
 template<class ElemType>
 void SLink<ElemType>::Set(int loc, const ElemType& e)
 {
-	if (loc < 1 || loc > length)
+	if (loc < 1 || loc > length)                         //异常处理
 		throw RANGE_ERROR;
-	int j = 1;
+	int j = 1;                                           //j为目标结点下标
 	for (int i = 1; i < loc; i++, j = node[j].next);
-	node[j].data = e;
+	node[j].data = e;                                    //循环后j为第loc个结点的下标，修改值
 }
 
 template<class ElemType>
@@ -179,12 +179,12 @@ ElemType SLink<ElemType>::Search(const int loc) const
 {
 	if (loc < 1 || loc > length)
 		throw RANGE_ERROR;
-	int j = node[0].next;
+	int j = node[0].next;                         //j用于记录结点下标
 	for (int i = 1; i < loc; i++)
 	{
 		j = node[j].next;
 	}
-	return node[j].data;
+	return node[j].data;                          //循环后j为第loc个结点的下标，返回值
 }
 
 template<class ElemType>
@@ -248,38 +248,39 @@ template<class ElemType> void SLink<ElemType>::Reverse()
 
 template<class ElemType>
 void SLink<ElemType>::Sort()
-{
+{                                                                       //选择排序
 	if (length <= 1) return;
-	int p = node[0].next;
-	for (int q = p; q != avail; q = p)
+	int p = node[0].next;                                           //p为无序链表的第一个
+	for (int q = p; q != avail; q = p)                              //q用于寻找无序链表中最小的结点，每次循环从p开始，到avail循环结束
 	{
 		for (int r = q; r != avail; r = node[r].next)
 		{
 			if (node[q].data > node[r].data)
-				q = r;
+				q = r;                                  //循环完成后q是无序链表中最小的结点
 		}
 		ElemType Temp = node[p].data;
 		node[p].data = node[q].data;
-		node[q].data = Temp;
-		p = node[p].next;
+		node[q].data = Temp;                                    //交换值
+		p = node[p].next;                                       //p后移
 	}
 }
 template<class ElemType>
 void SLink<ElemType>::Enlarge(const int L)
 {
-	if (L <= maxsize) throw RANGE_ERROR;
-	SNode<ElemType>* nNode = new SNode<ElemType>[L];
+	if (L <= maxsize) throw RANGE_ERROR;                            //L小于等于maxsize无意义
+	SNode<ElemType>* nNode = new SNode<ElemType>[L];                //申请更大的新空间
 	for (int i = 0; i < maxsize; i++)
 	{
-		nNode[i] = node[i];
+		nNode[i] = node[i];                                     //连着数据域和指针域一起复制
 	}
 	for (int i = maxsize; i < L; i++)
 	{
-		nNode[i].next = i + 1;
+		nNode[i].next = i + 1;                                  //超出maxsize的部分除了最后一个结点每个指针指向后一位
 	}
 	delete[] node;
 	node = nNode;
-	maxsize = L;
+	maxsize = L;                                                    //更新maxsize
+	//avail指向不需要改变
 }
 
 template<class ElemType>
@@ -294,7 +295,7 @@ SLink<ElemType>& SLink<ElemType>::operator=(const SLink<ElemType>& S)
 	{
 		node[i] = S.node[i];
 	}
-	avail = S.avail;
+	avail = S.avail;                                                //复制avail指向
 	return *this;
 }
 
