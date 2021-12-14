@@ -9,7 +9,7 @@ int main()
 	cout << "先检验从数组转换构造和深拷贝构造:" << endl;
 	double array[10];
 	for (int i = 0; i < 10; i++)
-		array[i] = 10-i;
+		array[i] = 0.1 * (i * i);
 	SLink<double> linktemplate(array, 10);
 	SLink<double> linkcopystruction(linktemplate);
 	linktemplate.Traverse();
