@@ -295,6 +295,7 @@ SLink<ElemType>& SLink<ElemType>::operator=(const SLink<ElemType>& S)
 		node[i] = S.node[i];
 	}
 	avail = S.avail;
+	return *this;
 }
 
 template <class ElemType> ostream& operator <<(ostream& out, const SLink<ElemType>& link)
