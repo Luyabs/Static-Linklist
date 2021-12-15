@@ -71,7 +71,7 @@ SLink<ElemType>::SLink(const ElemType* E, const int& size) :maxsize(MAXSIZE), le
 {
 	while (length >= maxsize)                                    //如果数组大小超出maxsize则进行扩容
 	{
-		maxsize = length *2;                                 //扩容为length的2倍
+		maxsize = length +10;                                 //扩容为length+10
 		cout << endl << "扩容成功" << endl;
 	}
 	node = new SNode<ElemType>[maxsize];                         //申请空间
@@ -320,11 +320,17 @@ template<class ElemType> istream& operator >>(istream& in, SLink<ElemType>& link
 	link.Reset();
 	int n;
 	in >> n;
+	while (link.maxsize <= n) 						 //如果数组大小超出maxsize则进行扩容
+	{
+		link.maxsize = n +10;
+		cout << endl << "扩容成功" << endl;
+	}
 	for (int i = 1; i < n; i++)
 	{
 		in >> link.node[i].data;
 	}
 	link.avail = n;
+	link.length = n-1;
 	return in;
 }
 template <class ElemType> void SLink<ElemType>::Load(const char* filename)		// 从指定文件中读取数据，构造链表
