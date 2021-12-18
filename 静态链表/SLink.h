@@ -273,7 +273,7 @@ void SLink<ElemType>::Enlarge(const int L)
 	{
 		nNode[i] = node[i];                                     //连着数据域和指针域一起复制
 	}
-	for (int i = maxsize; i < L; i++)
+	for (int i = maxsize-1; i < L; i++)
 	{
 		nNode[i].next = i + 1;                                  //超出maxsize的部分除了最后一个结点每个指针指向后一位
 	}
