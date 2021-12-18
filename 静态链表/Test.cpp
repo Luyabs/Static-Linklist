@@ -4,19 +4,8 @@
 
 using namespace std;
 
-int main()
-{	//检验深赋值运算和深拷贝运算
-	cout << "先检验从数组转换构造和深拷贝构造:" << endl;
-	double array[10];
-	for (int i = 0; i < 10; i++)
-		array[i] = 0.1 * (i * i);
-	SLink<double> linktemplate(array, 10);
-	SLink<double> linkcopystruction(linktemplate);
-	linktemplate.Traverse();
-	linkcopystruction.Traverse();
-	cout << "没有错误" << endl;
-
-
+void test()
+{	
 	SLink<double> link;
 	char c = '$';	//switch控制符
 	double e = 0;	//元素
@@ -26,7 +15,6 @@ int main()
 	while (c != '0')
 	{
 		cout << endl << "1. 生成静态链表(会重置链表).";
-		cout << endl << "x. 从已有静态链表生成静态链表(会重置链表).";
 		cout << endl << "2. 显示静态链表.";
 		cout << endl << "3. 设置元素值.";
 		cout << endl << "4. 删除元素.";
@@ -61,11 +49,6 @@ int main()
 				}
 				cin >> e;
 			}
-			break;
-		case 'x':
-			link.Reset();
-			link = linktemplate;
-			cout << "从最上方链表深赋值静态链表" << endl;
 			break;
 		case '2':
 			link.Traverse(true, cout);
@@ -106,6 +89,7 @@ int main()
 			try
 			{
 				link.Insert(i, e);
+				cout << "插入成功" << endl;
 			}
 			catch (int(err))
 			{
@@ -190,13 +174,159 @@ int main()
 			cout << endl << "正在从" << filename << "文件中读取链表";
 			link.Load(filename);
 			cout << endl << "读取成功" << endl;
+			link.Traverse(true, cout);
 			break;
 		case 'e':
 			cout << endl << "正在覆盖保存链表至" << filename << "文件";
 			link.Save(filename);
 			cout << endl << "保存成功" << endl;
 			break;
+			
 		}
-
 	}
+}
+
+void test1()
+{
+	//检验深赋值运算和深拷贝运算
+	cout<< "申请堆数组的大小为："<<MAXSIZE<<endl;
+	double array[10];
+	for (int i = 0; i < 10; i++)
+		array[i] = 10-i;
+	SLink<double> link1(array, 10);
+	SLink<double> link2(link1);
+	SLink<double> link3;
+	cout << "数组转换构造link1：" << endl;
+	link1.Traverse();
+	cout << "深拷贝构造link2：" << endl;
+	link2.Traverse();
+	link3 = link2;
+	cout << "深赋值静态链表link0" << endl;
+	link3.Traverse();
+	cout << "没有错误" << endl;
+}
+
+void test2()
+{
+	SLink<int> link;
+	cout << "\n测试插入函数：" << endl;
+	for(int i=0;i<7;i++)
+	{
+		try
+		{
+			link.Insert(i+1);
+		}
+		catch (int)
+		{
+			link.Traverse();
+			cout << "当前链表长度达到最大长度，需要先扩容才能插入新的值" << endl;
+		}
+	}
+	try
+		{
+			cout << "插入位置7" << endl;
+			link.Insert(7,7);
+		}
+		catch (int err)
+		{
+			link.Traverse();
+			if(err == 1002)
+				cout << "插入的元素位置出现错误" << endl;
+		}
+	try
+	{
+		cout << "\n测试删除函数：" << endl;
+		cout << "删除位置2" << endl;
+		link.Delete(2);
+		link.Traverse();
+		cout << "删除成功" << endl;
+		cout << "删除位置-1" << endl;
+		link.Delete(-1);
+	}
+	catch (int)
+	{
+			cout << "删除的元素位置不在链表存储范围内" << endl;
+	}
+	cout << "\n测试查找函数：" << endl;
+	cout << "查找元素3" << endl;
+	int f1 = link.Find(3);
+	if (f1 == NOT_FOUND)
+		cout << "元素不存在." << endl;
+	else
+		cout << "元素3的序号为：" << f1 << endl;
+	cout << "查找元素7" << endl;
+	int f2 = link.Find(7);
+	if (f2 == NOT_FOUND)
+		cout << "元素不存在" << endl;
+	else
+		cout << "元素7的序号为：" << f2 << endl;
+	try
+	{
+		cout << "查找位置4" << endl;
+		int s1 = link.Search(4);
+		cout << "该位置元素的值:" << s1 << endl;
+		cout << "查找位置-1" << endl;
+		int s2 = link.Search(-1);
+		cout << "该位置元素的值:" << s2 << endl;
+	}
+	catch (int)
+	{
+		cout << "位置范围错" << endl;
+	}
+	try
+	{
+		cout << "\n测试设置函数：" << endl;
+		cout << "设置位置1" << endl;
+		link.Set(1,2);
+		link.Traverse();
+		cout << "设置成功" << endl;
+		cout << "设置位置6" << endl;
+		link.Set(6,6);
+		link.Traverse();
+		cout << "设置成功" << endl;
+	}
+	catch (int)
+	{
+		cout << "位置范围错" << endl;
+	}
+	cout << endl << "单链表的长度为:" << link.Length() << endl;
+	cout << "重置链表：" << endl;
+	link.Reset();
+	if (link.Length() == 0)
+		cout << "链表已重置" << endl;
+	cout << "单链表的长度为:" << link.Length() << endl;
+}
+
+void test3()
+{
+	cout << "\n测试读写功能：" << endl;
+	SLink<double> link;
+	const char* filename = "SList.txt";
+	cout << endl << "正在从" << filename << "文件中读取链表";
+	link.Load(filename);
+	cout << endl << "读取成功" << endl;
+	link.Traverse(true, cout);
+	cout << "单链表的长度为:" << link.Length() << endl;
+	link.Reverse();
+	cout << endl << "逆序后的链表：" << endl;
+	link.Traverse(true, cout);
+	cout << "倒置成功" << endl;
+	cout << "\n测试升序排序" << endl;
+	link.Sort();
+	cout << "排序后的链表：" << endl;
+	link.Traverse(true, cout);
+	cout << "升序排序成功" << endl;
+	cout << endl << "正在覆盖保存链表至" << filename << "文件";
+	link.Save(filename);
+	cout << endl << "保存成功" << endl;
+}
+
+int main()
+{
+	test1();								//基本函数测试
+	test2();								//其他成员函数测试
+	test3();								//读写功能测试
+	//test();
+	system("Pause");
+	return 0;
 }
